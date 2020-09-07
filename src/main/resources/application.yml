@@ -1,0 +1,23 @@
+server:
+  port: 9000
+spring:
+  kafka:
+    template:
+      # 사용하는 topic
+      test-topic: demo
+    consumer:
+      # kafka 서버 주소
+      bootstrap-servers: localhost:9092
+      group-id: group_id
+      # kafka 에서 메세지를 가져오는 consumer의 offset정보가 존재하지 않는 경우의 처리 방법(- latest : 가장 마지막 offset부터, earliest : 가장 처음 offset부터, none : offset 없다면 에러 발생
+      auto-offset-reset: earliest
+      max-poll-records: 1000
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      # kafka 에서 메세지를 받고 자동으로 ACK 를 전송 여부 설정(true = 자동으로, false = 별도로 코드 구성 필요)
+      enable-auto-commit: true
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
