@@ -10,6 +10,15 @@
             <PatternLayout pattern="${LOG_FORMAT}"/>
         </Console>
 
+        <Kafka name="kafkaAppender" topic="demo-log">
+            <JSONLayout compact="true" eventEol="true"/>
+            <Property name="bootstrap.servers">localhost:9092</Property>
+        </Kafka>
+        <!--<Kafka name="kafkaAppender" topic="demo-log">
+            <PatternLayout pattern="[%-5p] [%d] [Thread:%t] %-17c{2} (%13F:%L) %3x - %m%n"/>
+            <Property name="bootstrap.servers">localhost:9092</Property>
+        </Kafka>-->
+
         <RollingFile name="LogToFile"
                      fileName="${BASE_DIR}/demo-log.log"
                      filePattern="${BASE_DIR}/demo-log.%d{yyyy-MM-dd}_%i.log.gz">
@@ -19,10 +28,10 @@
                 <TimeBasedTriggeringPolicy/>
             </Policies>
             <DefaultRolloverStrategy max="100">
-                <!--<Delete basePath="${BASE_DIR}">
+                <Delete basePath="${BASE_DIR}">
                     <IfFileName glob="*.log" />
-                    <IfLastModified age="15d" />
-                </Delete>-->
+                    <IfLastModified age="5d" />
+                </Delete>
             </DefaultRolloverStrategy>
         </RollingFile>
     </Appenders>
@@ -35,10 +44,12 @@
         <logger name="com.example.demo" level="debug" additivity="false">
             <AppenderRef ref="LogToConsole"/>
             <AppenderRef ref="LogToFile"/>
+            <AppenderRef ref="kafkaAppender"/>
         </logger>
         <Root level="info">
             <AppenderRef ref="LogToConsole"/>
             <AppenderRef ref="LogToFile"/>
+            <AppenderRef ref="kafkaAppender"/>
         </Root>
     </Loggers>
 </Configuration>
